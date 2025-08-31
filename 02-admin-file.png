@@ -1,0 +1,36 @@
+from django.contrib import admin
+
+# Import all 7 models
+from .models import Genres, Lesson, Instructor, Learner, Question, Choice, Submission
+
+# Define the ChoiceInline class
+class ChoiceInline(admin.StackedInline):
+    model = Choice
+    extra = 4
+
+# Define the QuestionInline class
+class QuestionInline(admin.StackedInline):
+    model = Question
+    extra = 2
+
+# Define the QuestionAdmin class
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [ChoiceInline]
+    list_display = ['content', 'lesson']
+    list_filter = ['lesson']
+
+# Define the LessonAdmin class
+class LessonAdmin(admin.ModelAdmin):
+    inlines = [QuestionInline]
+    list_display = ['name', 'course']
+    list_filter = ['course']
+    search_fields = ['name']
+
+# Register all models
+admin.site.register(Genres)
+admin.site.register(Lesson, LessonAdmin)
+admin.site.register(Instructor)
+admin.site.register(Learner)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Choice)
+admin.site.register(Submission)
